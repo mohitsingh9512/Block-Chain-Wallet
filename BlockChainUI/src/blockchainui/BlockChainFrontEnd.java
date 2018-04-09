@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import static javafx.css.StyleOrigin.USER_AGENT;
 import javax.swing.AbstractListModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import org.json.JSONArray;
@@ -133,6 +135,11 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         mineTransactionList.setVisibleRowCount(4);
+        mineTransactionList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mineTransactionListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(mineTransactionList);
 
         jLabel5.setText("MINE-TRANSACTIONS");
@@ -376,11 +383,11 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
         int index = sourceTabbedPane.getSelectedIndex();
         try{
             switch(index){
-                case 0 : hitGetAPI("blocks");
+                case 0 : hitGetAPI(null,"blocks");
                     break;
-                case 1: hitGetAPI("transactions");
+                case 1: hitGetAPI(null,"transactions");
                     break;
-                case 2: hitGetAPI("balance");
+                case 2: hitGetAPI(null,"balance");
                     break;
             }
         }catch(Exception e){
@@ -388,6 +395,20 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
         }
         System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
     }//GEN-LAST:event_jTabbedPane1StateChanged
+
+    private void mineTransactionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mineTransactionListMouseClicked
+        // TODO add your handling code here:
+        JList list = (JList)evt.getSource();
+        if (evt.getClickCount() == 2) {
+            try {
+                int index = list.locationToIndex(evt.getPoint());
+                hitGetAPI("300" + (index+1),"mine-transactions");
+                
+            } catch (IOException ex) {
+                Logger.getLogger(BlockChainFrontEnd.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_mineTransactionListMouseClicked
 
     
     /**
@@ -459,17 +480,18 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
     private void hitTransactAPI(String user, int port , int amount ){
         
         try {
-            final String POST_PARAMS = "amount=" + amount +",recipient=" + getPublicKey(port);
-            String recipient = getPublicKey(port);
-            URL obj = new URL("http://localhost:" + userMap.get(user) + "/" + "transact");
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("amount", amount);
+            jsonParam.put("recipient", getPublicKey(port));            
+            String postURL = "http://localhost:" + userMap.get(user) + "/" + "transact";
+            URL obj = new URL(postURL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("POST");
-
+            con.setRequestProperty("Content-Type","application/json");   
             // For POST only - START
             con.setDoOutput(true);
-            OutputStream os = con.getOutputStream();
-            os.write(POST_PARAMS.getBytes());
-            os.flush();
+            OutputStreamWriter os = new   OutputStreamWriter(con.getOutputStream());
+            os.write(jsonParam.toString());
             os.close();
             // For POST only - END
 
@@ -488,7 +510,7 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
                     in.close();
 
                     // print result
-                    System.out.println(response.toString());
+                    System.out.println(makePrettyJson(response.toString()));
             } else {
                     System.out.println("POST request not worked");
             }
@@ -528,7 +550,11 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
         return null;
     }
     
-    private void hitGetAPI(String apiName) throws IOException{
+    private void hitGetAPI(String port , String apiName) throws IOException{
+//        if(port == null){
+//            port = "3001";
+//            System.out.println("It is null");
+//        }
         URL obj = new URL("http://localhost:3001/" + apiName);
 	HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 	con.setRequestMethod("GET");
@@ -553,8 +579,10 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
                 hitTransactionsAPI(response.toString());
             }else if("balance".equals(apiName)){
                 hitBalanceAPI(response.toString());
+            }else if("mine-transactions".equals(apiName)){
+                hitMineTransactions(response.toString());
             }
-            System.out.println(response.toString());
+            System.out.println(makePrettyJson(response.toString()));
         } else {
             System.out.println("GET request not worked");
         }
@@ -569,6 +597,10 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
     }
     
     private void hitBalanceAPI(String response){
+        
+    }
+    
+    private void hitMineTransactions(String response){
         
     }
     
