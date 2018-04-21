@@ -95,9 +95,6 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         transactionsTA = new javax.swing.JTextArea();
-        jPanel5 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        balanceTA = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -289,29 +286,6 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("TRANSACTIONS", jPanel4);
 
-        balanceTA.setColumns(20);
-        balanceTA.setLineWrap(true);
-        balanceTA.setRows(5);
-        jScrollPane2.setViewportView(balanceTA);
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 16, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("BALANCE", jPanel5);
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -377,25 +351,6 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_senderComboBoxActionPerformed
 
-    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
-        // TODO add your handling code here:
-        JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
-        int index = sourceTabbedPane.getSelectedIndex();
-        try{
-            switch(index){
-                case 0 : hitGetAPI(null,"blocks");
-                    break;
-                case 1: hitGetAPI(null,"transactions");
-                    break;
-                case 2: hitGetAPI(null,"balance");
-                    break;
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
-    }//GEN-LAST:event_jTabbedPane1StateChanged
-
     private void mineTransactionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mineTransactionListMouseClicked
         // TODO add your handling code here:
         JList list = (JList)evt.getSource();
@@ -409,6 +364,25 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_mineTransactionListMouseClicked
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        // TODO add your handling code here:
+        JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
+        try{
+            switch(index){
+                case 0 : hitGetAPI(null,"blocks");
+                break;
+                case 1: hitGetAPI(null,"transactions");
+                break;
+                case 2: hitGetAPI(null,"balance");
+                break;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
     
     /**
@@ -616,7 +590,6 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
     private javax.swing.JButton addUserBtn;
     private javax.swing.JTextField addUserTF;
     private javax.swing.JTextField amountTF;
-    private javax.swing.JTextArea balanceTA;
     private javax.swing.JTextArea blocksTA;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -628,9 +601,7 @@ public class BlockChainFrontEnd extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
